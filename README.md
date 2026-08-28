@@ -233,7 +233,7 @@ POST /api/payment/create/bkash
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Key Technologies / Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -245,6 +245,7 @@ POST /api/payment/create/bkash
 | Auth Token | node-global-storage |
 | HTTP Client | Axios |
 | Payment | bKash Tokenized Checkout API |
+| Deployment | Vercel (Configured with `vercel.json`) |
 
 ---
 
