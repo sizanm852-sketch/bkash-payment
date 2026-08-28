@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import axios from "axios"
 import { getValue, setValue } from "node-global-storage"
 import { v4 as uuidv4 } from "uuid";
+import Payment from "./model";
 
 export const createPayment = async (req: Request, res: Response) => {
   const { amount } = req.body
@@ -39,6 +40,14 @@ export const createPayment = async (req: Request, res: Response) => {
     if (paymentID) {
       setValue(`invoice_${paymentID}`, merchantInvoiceNumber)
       setValue(`amount_${paymentID}`, amount?.toString())
+
+      // Save pending payment to MongoDB
+      await Payment.create({
+        paymentID,
+        amount,
+        invoiceID: merchantInvoiceNumber,
+        status: "pending",
+      });
     }
 
     return res.status(200).json({ url: bkashURL })
@@ -52,6 +61,10 @@ export const callbackPayment = async (req: Request, res: Response) => {
   const { paymentID, status } = req.query as { paymentID: string; status: string }
 
   if (status === "cancel" || status === "failure") {
+    await Payment.findOneAndUpdate(
+      { paymentID },
+      { status: status }
+    );
     return res.redirect(`http://localhost:5173/error?status=${status}`)
   }
 
@@ -86,16 +99,29 @@ export const callbackPayment = async (req: Request, res: Response) => {
                           ?? getValue(`invoice_${paymentID}`)
                           ?? "N/A"
 
+        // Update MongoDB payment record
+        await Payment.findOneAndUpdate(
+          { paymentID },
+          { status: "success", trxID, amount, invoiceID }
+        );
 
         return res.redirect(
           `http://localhost:5173/success?trxID=${trxID}&amount=${amount}&invoiceID=${encodeURIComponent(invoiceID)}`
         )
       } else {
+        await Payment.findOneAndUpdate(
+          { paymentID },
+          { status: "failed" }
+        );
         return res.redirect(
           `http://localhost:5173/error?status=failed&message=${encodeURIComponent(data?.statusMessage ?? "Unknown error")}`
         )
       }
     } catch (error: any) {
+      await Payment.findOneAndUpdate(
+        { paymentID },
+        { status: "failed" }
+      );
       return res.redirect(`http://localhost:5173/error?status=failed`)
     }
   }

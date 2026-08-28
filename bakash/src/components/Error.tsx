@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useSearchParams } from "react-router-dom"
+import { useSearchParams, Link } from "react-router-dom"
 import toast from "react-hot-toast"
 
 const ErrorPage = () => {
@@ -73,8 +73,8 @@ const ErrorPage = () => {
         </div>
 
         {/* Try again button */}
-        <a
-          href="/"
+        <Link
+          to="/"
           id="try-again-btn"
           className="w-full py-4 rounded-2xl font-bold text-base text-white tracking-wide
             bg-gradient-to-r from-bkash-pink to-bkash-dark
@@ -88,7 +88,7 @@ const ErrorPage = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
           Try Again
-        </a>
+        </Link>
       </div>
     </div>
   )

@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
 
 // Order details — in a real app these would come from your backend/cart
@@ -10,6 +11,7 @@ const ORDER = {
 
 const Home = () => {
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   const handlePayment = async () => {
     setLoading(true)
@@ -36,7 +38,7 @@ const Home = () => {
 
     paymentPromise.catch(() => {
       setLoading(false)
-      setTimeout(() => (window.location.href = "/error"), 1500)
+      setTimeout(() => navigate("/error"), 1500)
     })
   }
 

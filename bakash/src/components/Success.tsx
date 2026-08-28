@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { useSearchParams } from "react-router-dom"
+import { useSearchParams, Link } from "react-router-dom"
 import toast from "react-hot-toast"
 
 const Success = () => {
@@ -68,8 +68,8 @@ const Success = () => {
         </div>
 
         {/* Go Home button */}
-        <a
-          href="/"
+        <Link
+          to="/"
           id="go-home-btn"
           className="w-full py-4 rounded-2xl font-bold text-base text-white tracking-wide
             bg-gradient-to-r from-bkash-green to-emerald-500
@@ -83,7 +83,7 @@ const Success = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
           </svg>
           Back to Home
-        </a>
+        </Link>
 
         <p className="text-center text-slate-600 text-xs mt-5">
           Keep this page for your records. Transaction ID is your proof of payment.

@@ -1,9 +1,18 @@
+import { lazy, Suspense } from "react"
 import "./index.css"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { Toaster } from "react-hot-toast"
-import Home from "./components/Home"
-import Success from "./components/Success"
-import ErrorPage from "./components/Error"
+
+const Home = lazy(() => import("./components/Home"))
+const Success = lazy(() => import("./components/Success"))
+const ErrorPage = lazy(() => import("./components/Error"))
+
+const LoadingFallback = () => (
+  <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
+    <div className="w-12 h-12 border-4 border-bkash-pink/20 border-t-bkash-pink rounded-full animate-spin mb-4"></div>
+    <p className="text-slate-400 text-sm font-medium animate-pulse">Loading experience...</p>
+  </div>
+)
 
 const App = () => {
   return (
@@ -33,11 +42,13 @@ const App = () => {
           duration: 4000,
         }}
       />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/success" element={<Success />} />
-        <Route path="/error" element={<ErrorPage />} />
-      </Routes>
+      <Suspense fallback={<LoadingFallback />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/error" element={<ErrorPage />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   )
 }
