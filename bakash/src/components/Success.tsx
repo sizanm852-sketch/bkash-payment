@@ -1,8 +1,13 @@
 import { useEffect } from "react"
 import { useSearchParams, Link } from "react-router-dom"
 import toast from "react-hot-toast"
+import { useSEO } from "../hooks/useSEO"
 
 const Success = () => {
+  useSEO({
+    title: "Payment Successful",
+    description: "Your bKash transaction was completed successfully.",
+  })
   const [params] = useSearchParams()
   const trxID = params.get("trxID")
   const amount = params.get("amount")

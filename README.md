@@ -14,6 +14,8 @@ bkashwithpayment/
 │   │   │   ├── Home.tsx      # Checkout page
 │   │   │   ├── Success.tsx   # Payment success page
 │   │   │   └── Error.tsx     # Payment error page
+│   │   ├── hooks/
+│   │   │   └── useSEO.ts     # Custom hook for dynamic SEO tags
 │   │   ├── App.tsx
 │   │   └── index.css
 │   └── package.json
@@ -22,6 +24,7 @@ bkashwithpayment/
     │   ├── paymentController.ts  # Create & execute payment logic
     │   ├── middleware.ts         # bKash token grant middleware
     │   ├── route.ts             # API routes
+    │   ├── model.ts             # MongoDB Mongoose Payment schema
     │   └── index.ts             # Express app entry
     └── package.json
 ```
@@ -179,7 +182,8 @@ User clicks "Pay with bKash"
 Backend middleware: Grant Token from bKash
     ↓
 Backend: Create Payment → generates unique Invoice ID (INV-XXXXXXXXXXXX)
-         stores invoice + amount in memory (node-global-storage)
+         Saves 'pending' payment record securely to MongoDB
+         (Also caches invoice in node-global-storage)
     ↓
 User redirected to bKash Sandbox hosted payment page
     ↓
@@ -188,8 +192,9 @@ User enters test credentials and completes payment
 bKash calls: GET /bkash/payment/callback?paymentID=...&status=success
     ↓
 Backend: Execute Payment → retrieves trxID, amount, invoiceID
+         Updates MongoDB payment record to 'success' or 'failed'
     ↓
-User redirected to /success page with transaction details
+User redirected to /success page via SPA Routing with transaction details
 ```
 
 ---
@@ -237,11 +242,13 @@ POST /api/payment/create/bkash
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 19, TypeScript, Vite |
+| Frontend | React 19, TypeScript, Vite, React.lazy (Code Splitting) |
 | Styling | Tailwind CSS v3, Glassmorphism |
+| SEO | Custom `useSEO` hook, Dynamic Meta/OG tags |
 | Notifications | react-hot-toast |
-| Routing | react-router-dom v7 |
+| Routing | react-router-dom v7 (SPA Navigation) |
 | Backend | Express.js, TypeScript |
+| Database | MongoDB & Mongoose (Transaction Logging) |
 | Auth Token | node-global-storage |
 | HTTP Client | Axios |
 | Payment | bKash Tokenized Checkout API |

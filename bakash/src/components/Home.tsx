@@ -2,6 +2,7 @@ import axios from "axios"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
+import { useSEO } from "../hooks/useSEO"
 
 // Order details — in a real app these would come from your backend/cart
 const ORDER = {
@@ -10,6 +11,10 @@ const ORDER = {
 }
 
 const Home = () => {
+  useSEO({
+    title: "Checkout",
+    description: "Securely complete your payment via bKash gateway.",
+  })
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 

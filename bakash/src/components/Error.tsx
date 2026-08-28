@@ -1,8 +1,13 @@
 import { useEffect } from "react"
 import { useSearchParams, Link } from "react-router-dom"
 import toast from "react-hot-toast"
+import { useSEO } from "../hooks/useSEO"
 
 const ErrorPage = () => {
+  useSEO({
+    title: "Payment Failed",
+    description: "Your bKash transaction could not be completed.",
+  })
   const [params] = useSearchParams()
   const status = params.get("status")
   const message = params.get("message")
